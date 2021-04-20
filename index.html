@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>My page title</title>
+    <style>
+      html, body {
+        font: 1.2rem/2.5rem Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      main {
+        margin: 3em;
+      }
+      main > p {
+        margin: 3em 0;
+      }
+      h2 {
+        font-weight: normal;
+        font-size: .8em;
+        line-height: 1em;
+        color: rgb(70, 70, 70);
+      }
+      #resize {
+        width: 100%;
+        height: 400px;
+        background: #000;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      aside {
+        position: fixed;
+        display: flex;
+        align-items: center;
+        padding: 0 3em;
+        bottom: 0;
+        width: 100%;
+        height: 200px;
+        background: rgba(70,70,70, 0.6);
+      }
+      aside > label, aside > input {
+        font-size: 2em;
+        color: #ccc;
+      }
+      aside > input {
+        display: block;
+        width: 1em;
+        height: 1em;
+        margin-right: .5em;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Train to Resizing Containers</h1>
+      <h2>by: Kristofer Baxter</h2>
+      <p>Zombie ipsum reversus ab viral inferno, nam rick grimes malum cerebro. De carne lumbering animata corpora quaeritis. Summus brains sit​​, morbo vel maleficia? De apocalypsi gorger omero undead survivor dictum mauris. Hi mindless mortuis soulless creaturas, imo evil stalking monstra adventus resi dentevil vultus comedat cerebella viventium. Qui animated corpse, cricket bat max brucks terribilem incessu zomby. The voodoo sacerdos flesh eater, suscitat mortuos comedere carnem virus. Zonbi tattered for solum oculi eorum defunctis go lum cerebro. Nescio brains an Undead zombies. Sicut malus putrid voodoo horror. Nigh tofth eliv ingdead.</p>
+      <p>Zombie ipsum reversus ab viral inferno, nam rick grimes malum cerebro. De carne lumbering animata corpora quaeritis. Summus brains sit​​, morbo vel maleficia? De apocalypsi gorger omero undead survivor dictum mauris. Hi mindless mortuis soulless creaturas, imo evil stalking monstra adventus resi dentevil vultus comedat cerebella viventium. Qui animated corpse, cricket bat max brucks terribilem incessu zomby. The voodoo sacerdos flesh eater, suscitat mortuos comedere carnem virus. Zonbi tattered for solum oculi eorum defunctis go lum cerebro. Nescio brains an Undead zombies. Sicut malus putrid voodoo horror. Nigh tofth eliv ingdead.</p>
+      <div id="resize">This will resize frequently and reset scroll position.</div>
+      <p>Horribilem walking dead resurgere de crazed sepulcris creaturis, zombie sicut de grave feeding iride et serpens. Pestilentia, shaun ofthe dead scythe animated corpses ipsa screams. Pestilentia est plague haec decaying ambulabat mortuos. Sicut zeder apathetic malus voodoo. Aenean a dolor plan et terror soulless vulnerum contagium accedunt, mortui iam vivam unlife. Qui tardius moveri, brid eof reanimator sed in magna copia sint terribiles undeath legionis. Alii missing oculis aliorum sicut serpere crabs nostram. Putridi braindead odores kill and infect, aere implent left four dead.</p>
+      <p id="third">Lucio fulci tremor est dark vivos magna. Expansis creepy arm yof darkness ulnis witchcraft missing carnem armis Kirkman Moore and Adlard caeruleum in locis. Romero morbo Congress amarus in auras. Nihil horum sagittis tincidunt, zombie slack-jawed gelida survival portenta. The unleashed virus est, et iam zombie mortui ambulabunt super terram. Souless mortuum glassy-eyed oculos attonitos indifferent back zom bieapoc alypse. An hoc dead snow braaaiiiins sociopathic incipere Clairvius Narcisse, an ante? Is bello mundi z?</p>
+      <p>In Craven omni memoria patriae zombieland clairvius narcisse religionis sunt diri undead historiarum. Golums, zombies unrelenting et Raimi fascinati beheading. Maleficia! Vel cemetery man a modern bursting eyeballs perhsaps morbi. A terrenti flesh contagium. Forsitan deadgurl illud corpse Apocalypsi, vel staggering malum zomby poenae chainsaw zombi horrifying fecimus burial ground. Indeflexus shotgun coup de poudre monstra per plateas currere. Fit de decay nostra carne undead. Poenitentiam violent zom biehig hway agite RE:dead pœnitentiam! Vivens mortua sunt apud nos night of the living dead.</p>
+    </main>
+    <aside>
+      <input type="checkbox" checked id="enable-resizing">
+      <label for="enable-resizing">Enable Resizing</label>
+    </aside>
+    <script>
+      const resizeable = document.getElementById('resize');
+      const enableResizingCheckbox = document.getElementById('enable-resizing');
+      let interval;
+
+      function toggleUpdates() {
+        if (enableResizingCheckbox.checked) {
+          interval = setInterval(() => {
+            const {height: currentHeight} = resizeable.getBoundingClientRect();
+            const currentOffsetTop = resizeable.offsetTop;
+            const {scrollY: currentScrollY, scrollX} = window;
+            let newHeight, newScrollY;
+
+            if (currentHeight === 100) {
+              newHeight = 400;
+              newScrollY = scrollY + 300;
+            } else {
+              newHeight = 100;
+              newScrollY = scrollY - 300;
+            }
+
+            if (currentScrollY > (currentOffsetTop + newHeight)) {
+              // The resizeable area is above the viewport with a potential new size.
+              console.log('safe to change', `${currentScrollY} > (${currentOffsetTop} + ${newHeight})`);
+              resizeable.style.height = newHeight + 'px';
+              window.scroll(scrollX, newScrollY);
+            } else if (currentOffsetTop > (currentScrollY + innerHeight)) {
+              // The resizeable area is below the viewport with a potential new size.
+              console.log('safe to change', `${currentOffsetTop} > (${currentScrollY} + ${innerHeight})`);
+              resizeable.style.height = newHeight + 'px';
+            }
+          }, 1500);
+        } else {
+          clearInterval(interval);
+        }
+      }
+
+      toggleUpdates();
+      enableResizingCheckbox.addEventListener('change', toggleUpdates);
+    </script>
+  </body>
+</html>
