@@ -50,6 +50,12 @@
         height: 1em;
         margin-right: .5em;
       }
+      aside > p {
+        font-size: 2em;
+        display: block;
+        color: #f00;
+        padding-left: 1em;
+      }
     </style>
   </head>
   <body>
@@ -66,10 +72,14 @@
     <aside>
       <input type="checkbox" checked id="enable-resizing">
       <label for="enable-resizing">Enable Resizing</label>
+      <p>CLS: <span id="cls-value">0</span></p>
     </aside>
-    <script>
+    <script type="module">
+      import {getCLS} from 'https://unpkg.com/web-vitals?module';
+
       const resizeable = document.getElementById('resize');
       const enableResizingCheckbox = document.getElementById('enable-resizing');
+      const clsValue = document.getElementById('cls-value');
       let interval;
 
       function toggleUpdates() {
@@ -106,6 +116,9 @@
 
       toggleUpdates();
       enableResizingCheckbox.addEventListener('change', toggleUpdates);
+      getCLS(metric => {
+        clsValue.textContent = Number.parseFloat(metric.value).toPrecision(4);
+      }, true);
     </script>
   </body>
 </html>
